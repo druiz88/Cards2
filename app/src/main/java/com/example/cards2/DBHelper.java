@@ -73,4 +73,21 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean UpdatePart(String jPart, String jHand, String jScore, String jMID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("participant", jPart);
+        contentValues.put("hand", jHand);
+        contentValues.put("score", jScore);
+        contentValues.put("MATCHES_id", jMID);
+
+        long result = db.update(TABLE_NAME2,contentValues,"MATCHES_id=? AND participant=?",new String[]{jMID,jPart});
+
+        if(result==-1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

@@ -31,6 +31,7 @@ public class TableActivity extends AppCompatActivity {
     Map<String, ArrayList<String>> handz;
     ImageView img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11;
     List<ImageView> imgs;
+    String strk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class TableActivity extends AppCompatActivity {
         Intent receivedIntent = getIntent();
         long match = receivedIntent.getLongExtra("MATCH_ID",0);
 
-        String strk = String.valueOf(match);
+        strk = String.valueOf(match);
 
         data = DB.getMatchContent(Integer.parseInt(strk));
         matches = new Matches(data.getInt(0),data.getString(1),
@@ -100,6 +101,8 @@ public class TableActivity extends AppCompatActivity {
     public void Sort(View view){
         Collections.sort(Objects.requireNonNull(handz.get("n1")));
         dealHand();
+        updateData("1",handz.get("n1").toString(),"-",strk);
+
     }
 
     public void dealHand(){
@@ -124,6 +127,15 @@ public class TableActivity extends AppCompatActivity {
             });
         }
 
+    }
+
+    public void updateData(String vPart, String vHand, String vScore, String vMatch){
+        boolean  result = DB.UpdatePart(vPart,vHand,vScore,vMatch);
+        if(result){
+            Toast.makeText(this, "Data succesfully added", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Error adding data", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
