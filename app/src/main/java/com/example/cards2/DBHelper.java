@@ -43,6 +43,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public Cursor getPartContent(int match_id, int part_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME2 + " WHERE MATCHES_id=" + match_id +
+                " AND participant=" + part_id, null);
+        data.moveToFirst();
+        return data;
+    }
+
     public long AddMatch(String fStart, String fEnds, int fPlayers, String fResult){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

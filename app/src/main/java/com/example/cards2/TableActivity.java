@@ -2,7 +2,8 @@ package com.example.cards2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.database.Cursor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,12 +28,11 @@ public class TableActivity extends AppCompatActivity {
     DBHelper DB;
     TextView textView;
     Matches matches;
-    Cursor data;
+    Cursor data, data2;
     Map<String, ArrayList<String>> handz;
-    ImageView img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11;
-    List<ImageView> imgs;
-    String strk;
+    String strk, State;
     ImageView[] imageViews = new ImageView[11];
+    Part parts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,28 +43,53 @@ public class TableActivity extends AppCompatActivity {
         DB = new DBHelper(TableActivity.this);
         textView = findViewById(R.id.textView);
 
+        SharedPreferences profs = getSharedPreferences("state", Context.MODE_PRIVATE);
+        long match = profs.getLong("id",0);
+        State = profs.getString("state","DISCONNECTED");
+
+        Log.d("State", State);
+
         for(int u = 0; u < 11; u++){
             String imageID = "imageView" + (u+1);
             int resID = getResources().getIdentifier(imageID,"id",getPackageName());
             imageViews[u] = findViewById(resID);
         }
 
-        Intent receivedIntent = getIntent();
-        long match = receivedIntent.getLongExtra("MATCH_ID",0);
-
         strk = String.valueOf(match);
+
+        Log.d("MATCH ID",strk);
 
         data = DB.getMatchContent(Integer.parseInt(strk));
         matches = new Matches(data.getInt(0),data.getString(1),
                 data.getString(2),data.getInt(3),
                 data.getString(4));
 
-        handz = deck.dealHands(matches.getNplayers());
+        if(State.equals("DISCONNECTED")){
 
-        addPart("Deck", deck.arrayDeck().toString(),"",matches.getId());
+            State = "CONNECTED";
 
-        for(int z = 0; z < matches.getNplayers(); z++){
-            addPart(String.valueOf(z+1), Objects.requireNonNull(handz.get("n" + (z + 1))).toString(),"",matches.getId());
+            SharedPreferences prafs = getSharedPreferences("state", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prafs.edit();
+            editor.putString("state",State);
+            editor.apply();
+
+            handz = deck.dealHands(matches.getNplayers());
+
+            addPart("Deck", deck.arrayDeck().toString(),"",matches.getId());
+
+            for(int z = 0; z < matches.getNplayers(); z++){
+                addPart(String.valueOf(z+1), Objects.requireNonNull(handz.get("n" + (z + 1))).toString(),"",matches.getId());
+            }
+        } else {
+            data2 = DB.getPartContent(Integer.parseInt(strk),1);
+            parts = new Part(data2.getInt(0),data2.getString(1),
+                    data2.getString(2),data2.getInt(3),data2.getInt(4));
+            Log.d("Hand1", parts.getHand());
+            String num = parts.getHand().substring(1,parts.getHand().length()-1);
+            String[] str = num.split(", ");
+            ArrayList<String> al = new ArrayList<>(Arrays.asList(str).subList(0, 11));
+            handz = new HashMap<>();
+            handz.put("n1",al);
         }
 
         dealHand();
@@ -83,7 +108,7 @@ public class TableActivity extends AppCompatActivity {
     public void Sort(View view){
         Collections.sort(Objects.requireNonNull(handz.get("n1")));
         dealHand();
-        updateData("1",handz.get("n1").toString(),"",strk);
+        updateData("1", Objects.requireNonNull(handz.get("n1")).toString(),"",strk);
 
     }
 
