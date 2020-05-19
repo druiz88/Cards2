@@ -12,8 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     DBHelper DB;
     Spinner dropdown;
-    Button create_match, reconnect;
+    Button create_match, reconnect, abandon;
     String State;
     long id;
 
@@ -35,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         create_match = findViewById(R.id.button);
         reconnect = findViewById(R.id.button3);
+        abandon = findViewById(R.id.button4);
 
         dropdown = findViewById(R.id.spinner);
         String[] items = new String[]{"Pick", "2", "3", "4", "5", "6"};
@@ -50,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
             dropdown.setEnabled(false);
             create_match.setEnabled(false);
             reconnect.setEnabled(true);
+            abandon.setEnabled(true);
         } else {
             dropdown.setEnabled(true);
             create_match.setEnabled(true);
             reconnect.setEnabled(false);
+            abandon.setEnabled(false);
         }
 
     }
@@ -94,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
     public void Reconnect(View view){
         Intent i = new Intent(MainActivity.this, TableActivity.class);
         startActivity(i);
+    }
+
+    public void Abandon(View view){
+        SharedPreferences prefs = getSharedPreferences("state", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
     }
 
 

@@ -3,10 +3,10 @@ package com.example.cards2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -94,7 +94,7 @@ public class TableActivity extends AppCompatActivity {
     public void addPart(String bPnum, String bHand, String bScore, int bID){
         boolean  result = DB.AddPart(bPnum,bHand,bScore,bID);
         if(result){
-            Toast.makeText(this, "Data succesfully added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Match created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Error adding data", Toast.LENGTH_SHORT).show();
         }
@@ -134,10 +134,20 @@ public class TableActivity extends AppCompatActivity {
     public void updateData(String vPart, String vHand, String vScore, String vMatch){
         boolean  result = DB.UpdatePart(vPart,vHand,vScore,vMatch);
         if(result){
-            Toast.makeText(this, "Data succesfully added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cards sorted", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Error adding data", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void Abandon2(View view){
+        SharedPreferences prefs = getSharedPreferences("state", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(TableActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
 
