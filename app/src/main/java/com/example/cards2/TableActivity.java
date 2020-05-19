@@ -47,8 +47,6 @@ public class TableActivity extends AppCompatActivity {
         long match = profs.getLong("id",0);
         State = profs.getString("state","DISCONNECTED");
 
-        Log.d("State", State);
-
         for(int u = 0; u < 11; u++){
             String imageID = "imageView" + (u+1);
             int resID = getResources().getIdentifier(imageID,"id",getPackageName());
@@ -56,8 +54,6 @@ public class TableActivity extends AppCompatActivity {
         }
 
         strk = String.valueOf(match);
-
-        Log.d("MATCH ID",strk);
 
         data = DB.getMatchContent(Integer.parseInt(strk));
         matches = new Matches(data.getInt(0),data.getString(1),
@@ -84,7 +80,6 @@ public class TableActivity extends AppCompatActivity {
             data2 = DB.getPartContent(Integer.parseInt(strk),1);
             parts = new Part(data2.getInt(0),data2.getString(1),
                     data2.getString(2),data2.getInt(3),data2.getInt(4));
-            Log.d("Hand1", parts.getHand());
             String num = parts.getHand().substring(1,parts.getHand().length()-1);
             String[] str = num.split(", ");
             ArrayList<String> al = new ArrayList<>(Arrays.asList(str).subList(0, 11));
