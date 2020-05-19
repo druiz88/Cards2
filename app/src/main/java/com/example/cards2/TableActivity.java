@@ -32,6 +32,7 @@ public class TableActivity extends AppCompatActivity {
     ImageView img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11;
     List<ImageView> imgs;
     String strk;
+    ImageView[] imageViews = new ImageView[11];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,30 +43,11 @@ public class TableActivity extends AppCompatActivity {
         DB = new DBHelper(TableActivity.this);
         textView = findViewById(R.id.textView);
 
-        img1 = findViewById(R.id.imageView1);
-        img2 = findViewById(R.id.imageView2);
-        img3 = findViewById(R.id.imageView3);
-        img4 = findViewById(R.id.imageView4);
-        img5 = findViewById(R.id.imageView5);
-        img6 = findViewById(R.id.imageView6);
-        img7 = findViewById(R.id.imageView7);
-        img8 = findViewById(R.id.imageView8);
-        img9 = findViewById(R.id.imageView9);
-        img10 = findViewById(R.id.imageView10);
-        img11 = findViewById(R.id.imageView11);
-
-        imgs = new ArrayList<>();
-        imgs.add(img1);
-        imgs.add(img2);
-        imgs.add(img3);
-        imgs.add(img4);
-        imgs.add(img5);
-        imgs.add(img6);
-        imgs.add(img7);
-        imgs.add(img8);
-        imgs.add(img9);
-        imgs.add(img10);
-        imgs.add(img11);
+        for(int u = 0; u < 11; u++){
+            String imageID = "imageView" + (u+1);
+            int resID = getResources().getIdentifier(imageID,"id",getPackageName());
+            imageViews[u] = findViewById(resID);
+        }
 
         Intent receivedIntent = getIntent();
         long match = receivedIntent.getLongExtra("MATCH_ID",0);
@@ -101,7 +83,7 @@ public class TableActivity extends AppCompatActivity {
     public void Sort(View view){
         Collections.sort(Objects.requireNonNull(handz.get("n1")));
         dealHand();
-        updateData("1",handz.get("n1").toString(),"-",strk);
+        updateData("1",handz.get("n1").toString(),"",strk);
 
     }
 
@@ -109,7 +91,7 @@ public class TableActivity extends AppCompatActivity {
 
         for(int k = 0; k < 11; k++) {
             String fnm = Objects.requireNonNull(handz.get("n1")).get(k);
-            final ImageView img = imgs.get(k);
+            final ImageView img = imageViews[k];
             String PACKAGE_NAME = getApplicationContext().getPackageName();
             int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+fnm , null, null);
             img.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));

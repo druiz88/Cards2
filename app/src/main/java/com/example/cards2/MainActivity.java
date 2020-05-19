@@ -2,10 +2,13 @@ package com.example.cards2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
@@ -17,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     DBHelper DB;
     Spinner dropdown;
+    Button create_match, reconnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +28,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         DB = new DBHelper(this);
 
+
+
         dropdown = findViewById(R.id.spinner);
         String[] items = new String[]{"Pick", "2", "3", "4", "5", "6"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
+
+        create_match = findViewById(R.id.button);
 
     }
 
