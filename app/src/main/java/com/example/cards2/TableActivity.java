@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,8 +74,14 @@ public class TableActivity extends AppCompatActivity {
 
             addPart("Deck", deck.arrayDeck().toString(),"",matches.getId());
 
+            ArrayList<String> Order = new ArrayList<>();
+            for(int c = 0; c < matches.getNplayers(); c++) {
+                Order.add(String.valueOf(c+1));
+            }
+            Collections.shuffle(Order);
+
             for(int z = 0; z < matches.getNplayers(); z++){
-                addPart(String.valueOf(z+1), Objects.requireNonNull(handz.get("n" + (z + 1))).toString(),"",matches.getId());
+                addPart(Order.get(z), Objects.requireNonNull(handz.get("n" + (z + 1))).toString(),"",matches.getId());
             }
         } else {
             data2 = DB.getPartContent(Integer.parseInt(strk),1);
